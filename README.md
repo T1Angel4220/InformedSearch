@@ -20,8 +20,7 @@
 6. [Interfaz Gráfica y Funcionalidades](#-interfaz-gráfica-y-funcionalidades)
 7. [Matriz Comparativa de Métricas](#-matriz-comparativa-de-métricas)
 8. [Instalación y Ejecución](#-instalación-y-ejecución)
-9. [Documentación Técnica Detallada](#-documentación-técnica-detallada)
-10. [Créditos y Autores](#-créditos-y-autores)
+9. [Créditos y Autor](#-créditos-y-autor)
 
 ---
 
@@ -125,20 +124,8 @@ InformedSearch/
 │   ├── a_estrella.py                # Algoritmo A* con reapertura de nodos
 │   └── voraz.py                     # Algoritmo Búsqueda Voraz (Greedy Best-First)
 │
-├── visualizador/                    # Capa de presentación gráfica
-│   └── aplicacion.py                # Dashboard Tkinter/TTK: cuadrícula 3x3, animación y comparativas
-│
-└── guias_estudio/                   # Documentación técnica complementaria y análisis
-    ├── 1_nodo.md                    # Análisis detallado de nucleo/nodo.py
-    ├── 2_estructuras.md             # Análisis de la Cola de Prioridad
-    ├── 3_ambiente.md                # Lógica del entorno y operadores de movimiento
-    ├── 4_a_estrella.md              # Desglose matemático y operacional de A*
-    ├── 5_voraz.md                   # Desglose operacional de Búsqueda Voraz
-    ├── 6_metricas.md                # Reconstrucción de la trayectoria óptima
-    ├── 7_interfaz_grafica.md        # Arquitectura de eventos y renderizado Tkinter
-    ├── 8_preguntas_defensa.md       # Banco de preguntas teóricas y defensa conceptual
-    ├── explicacion_voraz.md         # Fundamentos y análisis de Búsqueda Voraz
-    └── preguntas_profesor.md        # Preguntas técnicas frecuentes y respuestas de diseño
+└── visualizador/                    # Capa de presentación gráfica
+    └── aplicacion.py                # Dashboard Tkinter/TTK: cuadrícula 3x3, animación y comparativas
 ```
 
 ---
@@ -208,29 +195,13 @@ python main.py
 
 ---
 
-## 📚 Documentación Técnica Detallada
+## 👤 Créditos y Autor
 
-En la carpeta [`guias_estudio/`](./guias_estudio/) se encuentra disponible un análisis exhaustivo del código y su fundamentación:
-* [`1_nodo.md`](./guias_estudio/1_nodo.md): Explicación del envoltorio de estado y método `__lt__`.
-* [`2_estructuras.md`](./guias_estudio/2_estructuras.md): Arquitectura de la `ColaPrioridad` y análisis de complejidad $O(n)$.
-* [`3_ambiente.md`](./guias_estudio/3_ambiente.md): Modelado del espacio de estados y funciones heurísticas.
-* [`4_a_estrella.md`](./guias_estudio/4_a_estrella.md): Implementación algorítmica de $A^*$ y gestión de frontera.
-* [`5_voraz.md`](./guias_estudio/5_voraz.md): Funcionamiento de Greedy Best-First Search.
-* [`6_metricas.md`](./guias_estudio/6_metricas.md): Reconstrucción inversa de la ruta por punteros de precedencia.
-* [`7_interfaz_grafica.md`](./guias_estudio/7_interfaz_grafica.md): Arquitectura del frontend interactivo con Tkinter.
-* [`8_preguntas_defensa.md`](./guias_estudio/8_preguntas_defensa.md): Banco de preguntas teóricas avanzadas para defensa del proyecto.
-* [`preguntas_profesor.md`](./guias_estudio/preguntas_profesor.md): Fundamentos técnicos y guía de preguntas frecuentes.
+Proyecto de portafolio personal de desarrollo de software e Inteligencia Artificial:
 
----
+* **Angel Israel Ayuquina Chimborazo**
+  * GitHub: [@T1Angel4220](https://github.com/T1Angel4220)
+  * Carrera: Ingeniería de Software
+  * Especialidad / Interés: Inteligencia Artificial y Algoritmos de Optimización
 
-## 👥 Créditos y Autores
-
-Proyecto académico y de portafolio profesional desarrollado por:
-
-* **Angel Israel Ayuquina Chimborazo** - [GitHub](https://github.com/T1Angel4220)
-* **Sebastian Alejandro Ortiz Bustos**
-
-**Institución:** Universidad Técnica de Ambato (UTA)  
-**Facultad:** Facultad de Ingeniería en Sistemas, Electrónica e Industrial (FISEI)  
-**Carrera:** Ingeniería de Software  
-**Área:** Inteligencia Artificial  
+*Colaboración académica original:* Sebastian Alejandro Ortiz Bustos (UTA - FISEI).
