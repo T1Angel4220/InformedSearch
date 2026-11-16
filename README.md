@@ -20,7 +20,7 @@
 6. [Interfaz Gráfica y Funcionalidades](#-interfaz-gráfica-y-funcionalidades)
 7. [Matriz Comparativa de Métricas](#-matriz-comparativa-de-métricas)
 8. [Instalación y Ejecución](#-instalación-y-ejecución)
-9. [Créditos y Autor](#-créditos-y-autor)
+9. [Licencia](#-licencia)
 
 ---
 
@@ -52,12 +52,12 @@ El algoritmo $A^*$ evalúa cada nodo $n$ utilizando la función de costo total e
 
 $$f(n) = g(n) + h(n)$$
 
-* **$g(n)$**: Costo acumulado exacto del camino desde el estado raíz hasta el nodo actual (costo unitario por movimiento, $g(hijo) = g(padre) + 1$).
+* **$g(n)$**: Costo acumulado exacto del camino desde el estado raíz hasta el nodo actual (costo unitario por movimiento).
 * **$h(n)$**: Costo heurístico estimado desde el nodo actual hasta la meta.
 
 **Propiedades teóricas:**
-* **Optimalidad y Completitud**: Garantizadas siempre que la función heurística $h(n)$ sea **admisible** (nunca sobreestima el costo real) y **consistente** (cumple la desigualdad triangular $h(n) \le c(n, a, n') + h(n')$).
-* **Control de Ciclos y Reapertura**: Implementa un registro de estados visitados mediante una tabla hash (`dict`) que almacena la relación `Estado -> Costo G`. Si un estado ya conocido es alcanzado a través de un camino más corto ($g_{nuevo} < g_{previo}$), el costo se actualiza y el nodo se reinserta en la frontera.
+* **Optimalidad y Completitud**: Garantizadas siempre que la función heurística $h(n)$ sea **admisible** (nunca sobreestima el costo real) y **consistente** (cumple la desigualdad triangular).
+* **Control de Ciclos y Reapertura**: Implementa un registro de estados visitados mediante una tabla hash (`dict`) que almacena la relación `Estado -> Costo G`. Si un estado ya conocido es alcanzado a través de un camino más corto, el costo se actualiza y el nodo se reinserta en la frontera.
 
 ### 2. Búsqueda Voraz / Primero el Mejor (Greedy Best-First Search)
 La Búsqueda Voraz selecciona el siguiente nodo a expandir basándose exclusivamente en su cercanía aparente a la meta:
@@ -66,30 +66,26 @@ $$f(n) = h(n)$$
 
 * **Comportamiento**: Ignora por completo el costo del camino ya recorrido ($g(n)$).
 * **Ventajas**: Puede converger con rapidez extrema en problemas simples o con heurísticas altamente informadas.
-* **Desventajas**: **No garantiza optimalidad**; puede quedar atrapado en ramas profundas no óptimas o mínimos locales antes de alcanzar la solución. Utiliza un conjunto cerrado (`set`) para poda de estados ya explorados.
+* **Desventajas**: **No garantiza optimalidad**; puede quedar atrapado en ramas profundas no óptimas. Utiliza un conjunto cerrado (`set`) para poda de estados ya explorados.
 
 ---
 
 ## 📐 Funciones Heurísticas
 
 ### 1. Piezas Descolocadas ($h_1$ - Misplaced Tiles)
-Cuenta la cantidad de fichas numéricas ($f_i \neq 0$) que no se encuentran en su posición objetivo final:
+Cuenta la cantidad de fichas numéricas que no se encuentran en su posición objetivo final:
 
 $$h_1(s) = \sum_{i=1}^{8} \mathbb{I}(s[i] \neq s_{meta}[i] \land s[i] \neq 0)$$
 
 * **Admisibilidad**: Sí. Cada pieza mal ubicada requerirá al menos 1 movimiento para llegar a su celda destino.
 
 ### 2. Distancia Manhattan ($h_2$ - Taxicab Distance)
-Calcula la suma de los desplazamientos absolutos ortogonales (horizontales y verticales en norma $L_1$) requeridos por cada ficha para alcanzar su coordenada meta:
+Calcula la suma de los desplazamientos absolutos ortogonales requeridos por cada ficha para alcanzar su coordenada meta:
 
 $$h_2(s) = \sum_{i=1}^{8} \left( |fila_{actual}(i) - fila_{meta}(i)| + |col_{actual}(i) - col_{meta}(i)| \right)$$
 
 * **Admisibilidad y Consistencia**: Sí. Asume un escenario ideal relajado donde las fichas pueden deslizarse libremente sin colisionar entre sí.
-* **Teorema de Dominancia**: Para cualquier estado $n$:
-
-$$h_2(n) \ge h_1(n)$$
-
-Al ser $h_2$ una heurística más ajustada al costo real, **domina** a $h_1$, lo que matemáticamente asegura que $A^*$ con $h_2$ podará un espacio de búsqueda igual o mayor que con $h_1$, reduciendo drásticamente el número de nodos expandidos y el uso de memoria.
+* **Teorema de Dominancia**: Para cualquier estado $n$, $h_2(n) \ge h_1(n)$. Al ser $h_2$ una heurística más ajustada al costo real, **domina** a $h_1$, reduciendo drásticamente el número de nodos expandidos.
 
 ---
 
@@ -99,8 +95,7 @@ No todas las configuraciones aleatorias del 8-Puzzle son alcanzables. En una cua
 
 $$\text{Inversiones} = \sum_{i < j} [A[i] > A[j]] \quad (\forall A[i], A[j] \neq 0)$$
 
-* **Inversión**: Se produce cuando una ficha con un número mayor precede linealmente a una ficha con un número menor en la lectura fila por fila del tablero.
-* **Mecanismo**: El módulo `nucleo/ambiente.py` implementa `es_resoluble(estado)`. Cualquier tablero generado aleatoriamente con inversiones impares es automáticamente descartado y regenerado, asegurando que el agente nunca ingrese en bucles infinitos por estados matemáticamente insolubles.
+El módulo `nucleo/ambiente.py` implementa `es_resoluble(estado)`. Cualquier tablero generado aleatoriamente con inversiones impares es automáticamente descartado y regenerado, asegurando que el agente nunca ingrese en bucles infinitos.
 
 ---
 
@@ -111,14 +106,15 @@ El proyecto está diseñado bajo principios de arquitectura modular limpia, desa
 ```text
 InformedSearch/
 ├── main.py                          # Punto de entrada principal para iniciar la GUI
-├── README.md                        # Documentación técnica completa del repositorio
-├── .gitignore                       # Filtro integral de archivos de sistema, entorno y caché
+├── README.md                        # Documentación técnica del repositorio
+├── LICENSE                          # MIT License
+├── .gitignore                       # Filtro integral de archivos de sistema y caché
 │
 ├── nucleo/                          # Capa de dominio y estructuras base
 │   ├── nodo.py                      # Abstracción Nodo: estado, padre, acción, g(n), h(n), f(n)
-│   ├── estructuras.py               # ColaPrioridad propia (implementación de lista con extracción mínima)
+│   ├── estructuras.py               # ColaPrioridad propia (extracción mínima en lista)
 │   ├── ambiente.py                  # Reglas del 8-Puzzle, sucesores legales, paridad e heurísticas
-│   └── metricas.py                  # Objeto MetricasBusqueda y algoritmo de reconstrucción de ruta
+│   └── metricas.py                  # MetricasBusqueda y reconstrucción de ruta por punteros
 │
 ├── algoritmos/                      # Capa de estrategias de búsqueda heurística
 │   ├── a_estrella.py                # Algoritmo A* con reapertura de nodos
@@ -135,50 +131,43 @@ InformedSearch/
 La aplicación cuenta con una interfaz gráfica moderna con paleta de colores estilo *Catppuccin Mocha*, estructurada en dos pestañas principales:
 
 ### Pestaña 1: Agente & Tablero 3x3
-* **Visualización del Tablero**: Renderizado dinámico de la cuadrícula de fichas con identificación del espacio vacío.
+* **Visualización del Tablero**: Renderizado dinámico de la cuadrícula de fichas.
 * **Generador de Estados**: Botón para producir aleatoriamente estados iniciales garantizados como solubles.
 * **Selectores**: Configuración en tiempo de ejecución del algoritmo ($A^*$ o Voraz) y la heurística ($h_1$ o $h_2$).
-* **Panel de Métricas en Vivo**: Muestra en tiempo real:
-  * Nodos Generados.
-  * Nodos Evaluados (Expandidos).
-  * Tiempo de Ejecución en milisegundos (`perf_counter`).
-  * Costo acumulado del camino $g(n)$.
-  * Cantidad de pasos en la solución.
-* **Control de Animación**: Reproducción automática, pausa, avance paso a paso y reinicio del recorrido de fichas hacia la meta.
-* **Secuencia de Movimientos**: Registro textual de la secuencia de acciones (`Arriba`, `Abajo`, `Izquierda`, `Derecha`).
+* **Panel de Métricas en Vivo**: Nodos Generados, Nodos Evaluados, Tiempo de Ejecución (ms), Costo $g(n)$ y Pasos de solución.
+* **Control de Animación**: Reproducción automática, pausa, avance paso a paso y reinicio del recorrido de fichas.
+* **Secuencia de Movimientos**: Registro textual de acciones (`Arriba`, `Abajo`, `Izquierda`, `Derecha`).
 
 ### Pestaña 2: Matriz Comparativa de Métricas
-* **Benchmarking Multivariable**: Ejecuta en un solo clic las 4 combinaciones posibles sobre el mismo estado inicial:
+* **Benchmarking Multivariable**: Ejecuta en un clic las 4 combinaciones sobre el mismo estado inicial:
   1. $A^*$ + Distancia Manhattan ($h_2$)
   2. $A^*$ + Piezas Descolocadas ($h_1$)
   3. Búsqueda Voraz + Distancia Manhattan ($h_2$)
   4. Búsqueda Voraz + Piezas Descolocadas ($h_1$)
-* **Tabla Treeview**: Visualización tabular unificada para contrastar directamente la eficiencia y la longitud del camino de cada método.
+* **Tabla Treeview**: Visualización tabular unificada para contrastar eficiencia y longitud de cada método.
 
 ---
 
 ## 📊 Matriz Comparativa de Rendimiento
 
-A continuación se ilustra un ejemplo de los resultados empíricos típicos generados por la aplicación ante un estado inicial de profundidad media ($d = 14$):
+Resultados empíricos típicos ante un estado inicial de profundidad media ($d = 14$):
 
-| Algoritmo | Heurística | Nodos Generados | Nodos Evaluados | Tiempo (ms) | Costo $g(n)$ | Pasos | Garantía Óptima |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **A\*** | **Manhattan ($h_2$)** | 185 | 82 | 4.8 ms | 14 | 14 | ✅ Sí |
-| **A\*** | **Piezas Descolocadas ($h_1$)** | 1,420 | 690 | 45.2 ms | 14 | 14 | ✅ Sí |
-| **Búsqueda Voraz** | **Manhattan ($h_2$)** | 48 | 21 | 1.9 ms | 18 | 18 | ❌ No (Subóptima) |
-| **Búsqueda Voraz** | **Piezas Descolocadas ($h_1$)** | 412 | 185 | 16.4 ms | 32 | 32 | ❌ No (Subóptima) |
+| Algoritmo | Heurística | Nodos Generados | Nodos Evaluados | Tiempo (ms) | Costo $g(n)$ | Garantía Óptima |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **A\*** | **Manhattan ($h_2$)** | 185 | 82 | 4.8 ms | 14 | ✅ Sí |
+| **A\*** | **Piezas Descolocadas ($h_1$)** | 1,420 | 690 | 45.2 ms | 14 | ✅ Sí |
+| **Búsqueda Voraz** | **Manhattan ($h_2$)** | 48 | 21 | 1.9 ms | 18 | ❌ No |
+| **Búsqueda Voraz** | **Piezas Descolocadas ($h_1$)** | 412 | 185 | 16.4 ms | 32 | ❌ No |
 
-> **Conclusiones clave del análisis:**
-> 1. $A^*$ con Manhattan es el estándar de referencia: encuentra la ruta estrictamente óptima evaluando una fracción de los nodos que requiere Piezas Descolocadas.
-> 2. Búsqueda Voraz suele ser más veloz en tiempo de CPU al evaluar menos nodos, pero sus soluciones suelen tener caminos significativamente más largos (subóptimos).
+> **Conclusiones clave:** $A^*$ con Manhattan es el estándar de referencia — óptimo y eficiente. Búsqueda Voraz es más rápida en CPU pero produce rutas subóptimas. Manhattan domina a Piezas Descolocadas en ambos algoritmos.
 
 ---
 
 ## 🚀 Instalación y Ejecución
 
 ### Prerrequisitos
-* **Python 3.8 o superior** (probado y optimizado en Python 3.10+).
-* No se requieren librerías externas (`pip install` no es necesario), ya que todo se apoya en módulos nativos de Python (`tkinter`, `time`, `random`).
+* **Python 3.8 o superior**
+* No se requieren librerías externas — el proyecto utiliza exclusivamente módulos nativos (`tkinter`, `time`, `random`).
 
 ### Clonación y Puesta en Marcha
 
@@ -186,7 +175,7 @@ A continuación se ilustra un ejemplo de los resultados empíricos típicos gene
 # 1. Clonar el repositorio
 git clone https://github.com/T1Angel4220/InformedSearch.git
 
-# 2. Ingresar al directorio del proyecto
+# 2. Ingresar al directorio
 cd InformedSearch
 
 # 3. Ejecutar la aplicación
@@ -195,13 +184,8 @@ python main.py
 
 ---
 
-## 👤 Créditos y Autor
+## 📄 Licencia
 
-Proyecto de portafolio personal de desarrollo de software e Inteligencia Artificial:
+Este proyecto está licenciado bajo la **MIT License** — consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
-* **Angel Israel Ayuquina Chimborazo**
-  * GitHub: [@T1Angel4220](https://github.com/T1Angel4220)
-  * Carrera: Ingeniería de Software
-  * Especialidad / Interés: Inteligencia Artificial y Algoritmos de Optimización
-
-*Colaboración académica original:* Sebastian Alejandro Ortiz Bustos (UTA - FISEI).
+Copyright (c) 2024-2026 Angel Ayuquina
